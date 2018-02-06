@@ -1,0 +1,59 @@
+/**
+ * Model for an EHR access control network
+ */
+namespace org.acme.biznet
+
+// access of a given EHR file, owned by a patient with a fileID, list of accessible roles/orgs, blocked accesses, and list of access events
+asset Access identified by fileID {
+    o String fileID
+    o RoleOrgProvider accessList
+    o AccessEvent [] accesses
+    o RoleOrgProvider[] blockedAccess
+    --> Patient fileOwner
+}
+
+// this concept pairs organization and roles, along with optional references to specific providers for granting or blocking access
+concept RoleOrgProvider {
+  	o String organization
+    o String role
+    --> Provider[] providers optional
+}
+
+// this concept tracks an access event when a request is being made by a provider to a fileID
+concept AccessEvent {
+  	--> Provider requestingProvider
+    o String fileID
+    o DateTime timeRequested
+}
+
+participant Patient identified by patientID {
+    o String patientID
+    o String firstName
+    o String lastName
+    --> Access[] ehrFiles
+}
+
+participant Provider identified by providerID {
+    o String providerID
+    o String firstName
+    o String lastName
+    o String organization
+    o String[] roles
+}
+
+transaction AccessRequest {
+    --> Access fileAccess
+    o AccessEvent accessevent
+}
+
+transaction AccessBlock {
+  --> Access fileAccess
+  o RoleOrgProvider blockedEntities
+  o String fileID
+}
+
+transaction AccessGrant {
+  --> Access fileAccess
+  o RoleOrgProvider accessEntities
+  o String fileID
+}
