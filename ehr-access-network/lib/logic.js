@@ -27,7 +27,53 @@
  * @param {org.acme.biznet.AccessRequest} access request - the access request to be tested, then granted or denied
  * @transaction
  */
-function handleAccessRequest(AccessRequest) {
+
+/** A transaction processor function description
+* @param {org.acme.biznet.AccessRequest} accessRequest-the access request to be tested, then granted or denied
+* @transaction
+*/
+
+function handleAccessRequest(accessRequest) {
+ 
+    var roleOrgIDs = accessRequest.requestingProvider.roleOrgs;
+  	var len=accessRequest.fileAccess.accessList.length;
+  	var success = 0;
+    
+    for(var i=0; i < len; i++){
+        var allowedRoleOrg = accessRequest.fileAccess.accessList[i].OrgRoleID;
+        var requestingRoleOrg = accessRequest.requestingProvider.roleOrg.OrgRoleID;
+    	if (allowedRoleOrg == requestingRoleOrg) {
+          accessRequest.fileAccess.accessCount++;
+          success = 1;
+      }
+    }
+    
+    return getAssetRegistry('org.acme.biznet.Access')
+        .then(function (assetRegistry) {
+      
+       var accessNotification = getFactory().newEvent('org.acme.biznet', 'AccessEvent');
+        accessNotification.fileAccessed = accessRequest.fileAccess;
+        accessNotification.requestingProvider = accessRequest.requestingProvider;
+      	accessNotification.success = success;
+        emit(accessNotification);
+      return assetRegistry.update(accessRequest.fileAccess);
+    });
+}
+
+/** A transaction processor function description
+* @param {org.acme.biznet.AccessGrant} accessGrant-the access to be granted
+* @transaction
+*/
+
+function handleAccessGrant(accessGrant) {
+  
+    accessGrant.fileAccess.accessList.push(accessGrant.accessEntities);
+    
+    return getAssetRegistry('org.acme.biznet.Access')
+        .then(function (assetRegistry) {
+      return assetRegistry.update(accessGrant.fileAccess);
+    });
+}
   
     // retrieve the associated 'Access' from the registry
  	// the AccessRequest.accessEvent.accessorID should be matched to a known provider ID
@@ -40,4 +86,3 @@ function handleAccessRequest(AccessRequest) {
     //     .then(function (assetRegistry) {
     //         return assetRegistry.update(trade.commodity);
     //     });
-}
