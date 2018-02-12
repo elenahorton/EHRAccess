@@ -6,17 +6,21 @@ namespace org.acme.biznet
 // TESTING: access of a given EHR file, owned by a patient with a fileID, list of accessible roles/orgs, blocked accesses, and list of access events
 asset Access identified by fileID {
     o String fileID
-    o RoleOrg[] accessList
+    o ProviderEntity[] accessList
     o Integer accessCount
-    o RoleOrg[] blockedAccess
+    o ProviderEntity[] blockedAccess
     --> Patient fileOwner
 }
 
+abstract participant ProviderEntity identified by entityID {
+  o String entityID
+}
+
 // this concept pairs organization and roles, along with optional references to specific providers for granting or blocking access
-participant RoleOrg identified by OrgRoleID{
-  	o String OrgRoleID
+participant RoleOrg extends ProviderEntity {
   	o String organization
     o String role
+    --> Provider[] providers
 }
 
 
@@ -26,11 +30,10 @@ participant Patient identified by patientID {
     o String lastName
 }
 
-participant Provider identified by providerID {
-    o String providerID
+participant Provider extends ProviderEntity {
     o String firstName
     o String lastName
-    o RoleOrg[] roleOrgs
+    --> RoleOrg[] roleOrgs
 }
 
 transaction AccessRequest {
@@ -40,13 +43,22 @@ transaction AccessRequest {
 
 transaction AccessBlock {
   --> Access fileAccess
-  --> RoleOrg blockedRoleOrg optional
-  --> Provider blockedIndividual optional
+  --> ProviderEntity blockedEntity
 }
 
 transaction AccessGrant {
   --> Access fileAccess
-  --> RoleOrg accessEntities
+  --> ProviderEntity accessEntity
+}
+
+transaction AddRoleOrg {
+  --> Provider provider
+  --> RoleOrg roleOrg
+}
+
+transaction RevokeRoleOrg {
+  --> Provider provider
+  --> RoleOrg roleOrg
 }
 
 event AccessEvent {

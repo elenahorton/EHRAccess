@@ -43,9 +43,9 @@ function handleAccessRequest(accessRequest) {
 	var i = 0;
     while (i < len && success == 0) {
       for(var j=0; j< lenRoles; j++) {
-        var allowedRoleOrg = accessRequest.fileAccess.accessList[i].OrgRoleID;
-        var requestingRoleOrg = accessRequest.requestingProvider.roleOrgs[j].OrgRoleID;
-    	if (allowedRoleOrg == requestingRoleOrg) {
+        var allowedEntity = accessRequest.fileAccess.accessList[i].entityID;
+        var requestingRoleOrg = accessRequest.requestingProvider.roleOrgs[j].entityID;
+    	if (allowedEntity == requestingRoleOrg || allowedEntity == accessRequest.requestingProvider.entityID) {
           accessRequest.fileAccess.accessCount++;
           success = 1;
           break;
@@ -73,22 +73,63 @@ function handleAccessRequest(accessRequest) {
 
 function handleAccessGrant(accessGrant) {
   
-    accessGrant.fileAccess.accessList.push(accessGrant.accessEntities);
+    accessGrant.fileAccess.accessList.push(accessGrant.accessEntity);
     
     return getAssetRegistry('org.acme.biznet.Access')
         .then(function (assetRegistry) {
       return assetRegistry.update(accessGrant.fileAccess);
     });
 }
+
+/** A transaction processor function description
+* @param {org.acme.biznet.AddRoleOrg} addingRoleOrg-the role org transaction to be added to a provider
+* @transaction
+*/
+
+function handleAddingRoleOrg(addingRoleOrg) {
   
-    // retrieve the associated 'Access' from the registry
- 	// the AccessRequest.accessEvent.accessorID should be matched to a known provider ID
-  	// check the 'Access' asset's list of blocked RoleOrgProviders; verify that accessorID != any blocked provider IDs AND that <Role, Org> pairs matching accessorID <Role,Org> is not blocked
-  // check the 'Access asset's list of accessible RoleOrgProviders; verify that accessorID's <role, org> pair is on the list or that the explicit providerID is on the list
-  // if both tests pass, grant access, update registry
-  // otherwise, deny access, alert user and Access owner (patient)
+    addingRoleOrg.provider.roleOrgs.push(addingRoleOrg.roleOrg);
+    addingRoleOrg.roleOrg.providers.push(addingRoleOrg.provider);
+    
+    var updateList1 = getParticipantRegistry('org.acme.biznet.Provider')
+        .then(function (participantRegistry) {
+      return participantRegistry.update(addingRoleOrg.provider);
+    });
+
+    var updateList2 = getParticipantRegistry('org.acme.biznet.RoleOrg')
+        .then(function (participantRegistry) {
+        return participantRegistry.update(addingRoleOrg.roleOrg);
+    });
+
+    return updateList1 && updateList2;
+}
+
+/** A transaction processor function description
+* @param {org.acme.biznet.RevokeRoleOrg} revokingRoleOrg-the role org transaction to be revoked from a provider
+* @transaction
+*/
+
+function handleAddingRoleOrg(revokingRoleOrg) {
   
-    // return getAssetRegistry('org.acme.biznet.Access')
-    //     .then(function (assetRegistry) {
-    //         return assetRegistry.update(trade.commodity);
-    //     });
+    var index = revokingRoleOrg.provider.roleOrgs.indexOf(revokingRoleOrg.roleOrg);
+    if (index !== -1) {
+        revokingRoleOrg.provider.roleOrgs.splice(index, 1);
+    }
+
+    var provIndex = revokingRoleOrg.roleOrg.providers.indexOf(revokingRoleOrg.provider);
+    if (provIndex !== -1) {
+        revokingRoleOrg.roleOrg.providers.splice(provIndex, 1);
+    }
+    
+    var updateList1 = getParticipantRegistry('org.acme.biznet.Provider')
+        .then(function (participantRegistry) {
+      return participantRegistry.update(revokingRoleOrg.provider);
+    });
+
+    var updateList2 = getParticipantRegistry('org.acme.biznet.RoleOrg')
+        .then(function (participantRegistry) {
+        return participantRegistry.update(revokingRoleOrg.roleOrg);
+    });
+
+    return updateList1 && updateList2;
+}
