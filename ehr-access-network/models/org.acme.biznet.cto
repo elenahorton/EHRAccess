@@ -30,7 +30,7 @@ participant Provider identified by providerID {
     o String providerID
     o String firstName
     o String lastName
-    o RoleOrg roleOrg
+    o RoleOrg[] roleOrgs
 }
 
 transaction AccessRequest {
@@ -53,9 +53,4 @@ event AccessEvent {
   --> Access fileAccessed
   --> Provider requestingProvider
   o Integer success
-}
-
-event AccessDenied {
-  --> Access fileAccessed
-  --> Provider attemptedAccessor
 }

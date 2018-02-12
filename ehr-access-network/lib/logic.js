@@ -37,14 +37,20 @@ function handleAccessRequest(accessRequest) {
  
     var roleOrgIDs = accessRequest.requestingProvider.roleOrgs;
   	var len=accessRequest.fileAccess.accessList.length;
+  	var lenRoles = accessRequest.requestingProvider.roleOrgs.length;
   	var success = 0;
     
-    for(var i=0; i < len; i++){
+	var i = 0;
+    while (i < len && success == 0) {
+      for(var j=0; j< lenRoles; j++) {
         var allowedRoleOrg = accessRequest.fileAccess.accessList[i].OrgRoleID;
-        var requestingRoleOrg = accessRequest.requestingProvider.roleOrg.OrgRoleID;
+        var requestingRoleOrg = accessRequest.requestingProvider.roleOrgs[j].OrgRoleID;
     	if (allowedRoleOrg == requestingRoleOrg) {
           accessRequest.fileAccess.accessCount++;
           success = 1;
+          break;
+      	}
+      i++;
       }
     }
     

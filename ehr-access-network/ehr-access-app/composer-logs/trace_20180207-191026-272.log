@@ -32,3 +32,37 @@
     at ClientDuplexStream.emit (events.js:188:7)
     at readableAddChunk (_stream_readable.js:172:18)
     at ClientDuplexStream.Readable.push (_stream_readable.js:130:10) {}$
+2018-02-12T01:56:31.122Z ERROR   HLFConnectionManager    :fabric-client()          [EventHub.js]: on.data - Error unmarshalling transaction= Error: Cannot instantiate Abstract Type AccessEvent in namespace org.acme.biznet
+    at Factory.newConcept (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-common/lib/factory.js:155:19)
+    at Serializer.fromJSON (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-common/lib/serializer.js:162:37)
+    at events.forEach (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-client/lib/businessnetworkconnection.js:479:89)
+    at Array.forEach (native)
+    at HLFConnection.connection.on (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-client/lib/businessnetworkconnection.js:478:28)
+    at emitOne (events.js:96:13)
+    at HLFConnection.emit (events.js:188:7)
+    at ccEvent.eventHubs.(anonymous function).registerChaincodeEvent [as onEvent] (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-connector-hlfv1/lib/hlfconnection.js:234:22)
+    at /Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/fabric-client/lib/EventHub.js:810:12
+    at Set.forEach (native)
+    at _processChainCodeOnEvents (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/fabric-client/lib/EventHub.js:808:14)
+    at ClientDuplexStream.<anonymous> (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/fabric-client/lib/EventHub.js:311:10)
+    at emitOne (events.js:96:13)
+    at ClientDuplexStream.emit (events.js:188:7)
+    at readableAddChunk (_stream_readable.js:172:18)
+    at ClientDuplexStream.Readable.push (_stream_readable.js:130:10) {}$
+2018-02-12T02:00:21.879Z ERROR   HLFConnectionManager    :fabric-client()          [EventHub.js]: on.data - Error unmarshalling transaction= Error: Cannot instantiate Abstract Type AccessEvent in namespace org.acme.biznet
+    at Factory.newConcept (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-common/lib/factory.js:155:19)
+    at Serializer.fromJSON (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-common/lib/serializer.js:162:37)
+    at events.forEach (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-client/lib/businessnetworkconnection.js:479:89)
+    at Array.forEach (native)
+    at HLFConnection.connection.on (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-client/lib/businessnetworkconnection.js:478:28)
+    at emitOne (events.js:96:13)
+    at HLFConnection.emit (events.js:188:7)
+    at ccEvent.eventHubs.(anonymous function).registerChaincodeEvent [as onEvent] (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/composer-connector-hlfv1/lib/hlfconnection.js:234:22)
+    at /Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/fabric-client/lib/EventHub.js:810:12
+    at Set.forEach (native)
+    at _processChainCodeOnEvents (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/fabric-client/lib/EventHub.js:808:14)
+    at ClientDuplexStream.<anonymous> (/Users/elenahorton/fabric-tools/ehr-access-network/ehr-access-app/node_modules/fabric-client/lib/EventHub.js:311:10)
+    at emitOne (events.js:96:13)
+    at ClientDuplexStream.emit (events.js:188:7)
+    at readableAddChunk (_stream_readable.js:172:18)
+    at ClientDuplexStream.Readable.push (_stream_readable.js:130:10) {}$
