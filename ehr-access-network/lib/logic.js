@@ -38,10 +38,19 @@ function handleAccessRequest(accessRequest) {
     var roleOrgIDs = accessRequest.requestingProvider.roleOrgs;
   	var len=accessRequest.fileAccess.accessList.length;
   	var lenRoles = accessRequest.requestingProvider.roleOrgs.length;
-  	var success = 0;
+    var success = 0;
+    var blocked = 0;
+      
+    // first ensure that the requesting entity is not blocked
+    for (var b = 0; b < accessRequest.fileAccess.blockedList.length; b++) {
+        if (accessRequest.requestingProvider.entityID == accessRequest.fileAccess.blockedList[b].entityID) {
+            blocked = 1; 
+            break;
+        }
+    }
     
 	var i = 0;
-    while (i < len && success == 0) {
+    while (i < len && success == 0 && blocked == 0) {
       for(var j=0; j< lenRoles; j++) {
         var allowedEntity = accessRequest.fileAccess.accessList[i].entityID;
         var requestingRoleOrg = accessRequest.requestingProvider.roleOrgs[j].entityID;
@@ -82,6 +91,21 @@ function handleAccessGrant(accessGrant) {
 }
 
 /** A transaction processor function description
+* @param {org.acme.biznet.AccessBlock} accessBlock- the access to be blocked
+* @transaction
+*/
+
+function handleAccessBlock(accessBlock) {
+  
+    accessBlock.fileAccess.blockedList.push(accessBlock.blockedEntity);
+    
+    return getAssetRegistry('org.acme.biznet.Access')
+        .then(function (assetRegistry) {
+      return assetRegistry.update(accessBlock.fileAccess);
+    });
+}
+
+/** A transaction processor function description
 * @param {org.acme.biznet.AddRoleOrg} addingRoleOrg-the role org transaction to be added to a provider
 * @transaction
 */
@@ -109,7 +133,7 @@ function handleAddingRoleOrg(addingRoleOrg) {
 * @transaction
 */
 
-function handleAddingRoleOrg(revokingRoleOrg) {
+function handleRevokingRoleOrg(revokingRoleOrg) {
   
     var index = revokingRoleOrg.provider.roleOrgs.indexOf(revokingRoleOrg.roleOrg);
     if (index !== -1) {

@@ -8,7 +8,7 @@ asset Access identified by fileID {
     o String fileID
     o ProviderEntity[] accessList
     o Integer accessCount
-    o ProviderEntity[] blockedAccess
+    o ProviderEntity[] blockedList
     --> Patient fileOwner
 }
 
