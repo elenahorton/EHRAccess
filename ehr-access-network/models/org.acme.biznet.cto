@@ -23,6 +23,12 @@ participant RoleOrg extends ProviderEntity {
     --> Provider[] providers
 }
 
+participant ProviderAdmin extends ProviderEntity {
+    o String firstName
+    o String lastName
+    --> Provider providerIdentity
+}
+
 
 participant Patient identified by patientID {
     o String patientID
