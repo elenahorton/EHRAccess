@@ -15,3 +15,5 @@ Then run `composer network deploy -a ehr-access-network@0.0.3.bna  -A admin -S a
 
 Additional documentation for troubleshooting found here: `https://hyperledger.github.io/composer/latest/introduction/introduction.html`
 
+Hyperledger scripts are found in the `Hyperledger` folder, transaction and participant models are found in the `model` folder, and chaincode logic is found in `logic.js` in the `lib` folder.
+
