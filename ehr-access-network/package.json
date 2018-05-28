@@ -18,5 +18,8 @@
     "istanbul": "latest",
     "mkdirp": "latest",
     "mocha": "latest"
+  },
+  "dependencies": {
+    "yo": "^2.0.2"
   }
 }

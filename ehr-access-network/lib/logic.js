@@ -126,7 +126,7 @@ function handleAddingRoleOrg(addingRoleOrg) {
     addingRoleOrg.provider.roleOrgs.push(addingRoleOrg.roleOrg);
     addingRoleOrg.roleOrg.providers.push(addingRoleOrg.provider);
     
-    var updateList1 = getParticipantRegistry('org.acme.biznet.ProviderAdmin')
+    var updateList1 = getParticipantRegistry('org.acme.biznet.Provider')
         .then(function (participantRegistry) {
       return participantRegistry.update(addingRoleOrg.provider);
     });
