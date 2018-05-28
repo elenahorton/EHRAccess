@@ -1,7 +1,7 @@
 # EHRAccess
-###Elena Horton, April 2018
+### Elena Horton, April 2018
 
-###This repository contains code for an EHR access control blockchain network, run with Hyperledger Composer, and a skeleton node.js application.
+### This repository contains code for an EHR access control blockchain network, run with Hyperledger Composer, and a skeleton node.js application.
 
 The most recent version of this network is packaged in the *business network archive* file (`.bna`) is `ehr-access-network@0.0.3.bna`
 
